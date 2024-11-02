@@ -12,6 +12,7 @@ const Cart = ({
   setCart,
   cartTotal,
   setCartTotal,
+  addToCart,
   removeFromCart,
 }) => {
   const handleBackwardsClick = () => {
@@ -42,29 +43,42 @@ const Cart = ({
           </Navbar>
           <Container className="py-4">
             <Row>
-              {cart.length > 0 ? (
+              {Object.keys(cart).length > 0 ? (
                 <>
-                  {cart.map((el, index) => (
-                    <div key={index} className="d-flex align-items-center mb-3">
+                  {Object.values(cart).map(({ item, quantity }) => (
+                    <div
+                      key={item.id}
+                      className="d-flex align-items-center mb-3"
+                    >
                       <img
-                        src={el.image}
+                        src={item.image}
                         width={50}
-                        alt={el.title}
+                        alt={item.title}
                         className="me-3"
                       />
                       <div className="flex-grow-1">
-                        <p className="mb-0">{el.title}</p>
+                        <p className="mb-0">{item.title}</p>
                         <p className="text-muted mb-0">
-                          ${el.price.toFixed(2)}
+                          ${item.price.toFixed(2)}
                         </p>
+                        <p className="text-muted mb-0">Quantity: {quantity}</p>
                       </div>
-                      <Button
-                        variant="danger"
-                        size="sm"
-                        onClick={() => removeFromCart(el)}
-                      >
-                        -
-                      </Button>
+                      <div className="d-flex justify-content-between align-items-center">
+                        <Button
+                          variant="danger"
+                          className="mx-1"
+                          onClick={() => removeFromCart(item)}
+                        >
+                          -
+                        </Button>
+                        <Button
+                          variant="primary"
+                          className="mx-1"
+                          onClick={() => addToCart(item)}
+                        >
+                          +
+                        </Button>
+                      </div>
                     </div>
                   ))}
                   <hr />

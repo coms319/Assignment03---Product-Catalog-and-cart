@@ -5,8 +5,9 @@ import Summary from './summary';
 
 function App() {
   const [catalog, setCatalog] = useState([]);
-  const [cart, setCart] = useState([]);
+  const [cart, setCart] = useState({});
   const [cartTotal, setCartTotal] = useState(0);
+  const [quantity, setQuantity] = useState(0);
   const [viewer, setViewer] = useState(0);
 
   useEffect(() => {
@@ -21,30 +22,49 @@ function App() {
   useEffect(() => {
     const total = () => {
       let totalAmount = 0;
-      for (let i = 0; i < cart.length; i++) {
-        totalAmount += cart[i].price;
+      let totalQuantity = 0;
+      for (const key in cart) {
+        totalAmount += cart[key].item.price * cart[key].quantity;
+        totalQuantity += cart[key].quantity;
       }
       setCartTotal(totalAmount);
+      setQuantity(totalQuantity);
     };
     total();
   }, [cart]);
 
   const addToCart = (el) => {
-    setCart([...cart, el]);
+    setCart((prevCart) => {
+      const existingItem = prevCart[el.id];
+
+      return {
+        ...prevCart,
+        [el.id]: existingItem
+          ? { ...existingItem, quantity: existingItem.quantity + 1 }
+          : { item: el, quantity: 1 },
+      };
+    });
   };
 
   const removeFromCart = (el) => {
-    let itemFound = false;
-    const updatedCart = cart.filter((cartItem) => {
-      if (cartItem.id === el.id && !itemFound) {
-        itemFound = true;
-        return false;
+    setCart((prevCart) => {
+      const existingItem = prevCart[el.id];
+
+      if (!existingItem) return prevCart; // Item doesn't exist, no change
+
+      if (existingItem.quantity > 1) {
+        // Decrease quantity by 1
+        return {
+          ...prevCart,
+          [el.id]: { ...existingItem, quantity: existingItem.quantity - 1 },
+        };
+      } else {
+        // Remove item from cart
+        const newCart = { ...prevCart };
+        delete newCart[el.id];
+        return newCart;
       }
-      return true;
     });
-    if (itemFound) {
-      setCart(updatedCart);
-    }
   };
 
   return (
@@ -53,7 +73,8 @@ function App() {
         viewer={viewer}
         setViewer={setViewer}
         cart={cart}
-        setCart={setCart}
+        cartTotal={cartTotal}
+        quantity={quantity}
         addToCart={addToCart}
         removeFromCart={removeFromCart}
         catalog={catalog}
@@ -66,6 +87,7 @@ function App() {
         setCart={setCart}
         cartTotal={cartTotal}
         setCartTotal={setCartTotal}
+        addToCart={addToCart}
         removeFromCart={removeFromCart}
       />
 
