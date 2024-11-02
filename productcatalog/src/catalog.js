@@ -1,7 +1,7 @@
 import React from 'react';
 import { Container, Button, Card, Row, Col } from 'react-bootstrap';
 
-const Shop = ({ viewer, setViewer, addToCart, removeFromCart, catalog }) => {
+const Catalog = ({ viewer, setViewer, addToCart, removeFromCart, catalog }) => {
   return (
     <>
       {viewer === 0 && (
@@ -43,4 +43,4 @@ const Shop = ({ viewer, setViewer, addToCart, removeFromCart, catalog }) => {
   );
 };
 
-export default Shop;
+export default Catalog;

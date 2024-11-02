@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import Catalog from './catalog';
-import { Navbar, Container, Nav, Button, Offcanvas } from 'react-bootstrap';
+import { Navbar, Container, Nav, Button } from 'react-bootstrap';
 import { FaShoppingCart } from 'react-icons/fa';
+import Cart from './cart';
+import Catalog from './catalog';
+import Summary from './summary';
 
 function App() {
   const [catalog, setCatalog] = useState([]);
   const [cart, setCart] = useState([]);
   const [cartTotal, setCartTotal] = useState(0);
-  const [showCart, setShowCart] = useState(false);
   const [viewer, setViewer] = useState(0);
 
   useEffect(() => {
@@ -30,8 +31,6 @@ function App() {
     total();
   }, [cart]);
 
-  const toggleCart = () => setShowCart(!showCart);
-
   const removeFromCart = (el) => {
     let itemFound = false;
     const updatedCart = cart.filter((cartItem) => {
@@ -50,55 +49,32 @@ function App() {
     setCart([...cart, el]);
   };
 
+  const handleIndexClick = () => {
+    setViewer(0);
+  };
+
+  const handleCartClick = () => {
+    setViewer(1);
+  };
+
+  const handleSummaryClick = () => {
+    setViewer(2);
+  };
+
   return (
     <div>
       <Navbar bg="dark" variant="dark" expand="lg">
         <Container>
-          <Navbar.Brand href="#">My Shop</Navbar.Brand>
-          <Nav className="ms-auto">
-            <Button variant="outline-light" onClick={toggleCart}>
+          <Navbar.Brand role="button" onClick={handleIndexClick}>
+            My Shop
+          </Navbar.Brand>
+          <Nav className="me-auto">
+            <Button variant="outline-light" onClick={handleCartClick}>
               <FaShoppingCart /> <span className="ms-2">{cart.length}</span>
             </Button>
           </Nav>
         </Container>
       </Navbar>
-
-      <Offcanvas show={showCart} onHide={toggleCart} placement="end">
-        <Offcanvas.Header closeButton>
-          <Offcanvas.Title>Your Cart</Offcanvas.Title>
-        </Offcanvas.Header>
-        <Offcanvas.Body>
-          {cart.length > 0 ? (
-            <>
-              {cart.map((el, index) => (
-                <div key={index} className="d-flex align-items-center mb-3">
-                  <img
-                    src={el.image}
-                    width={50}
-                    alt={el.title}
-                    className="me-3"
-                  />
-                  <div className="flex-grow-1">
-                    <p className="mb-0">{el.title}</p>
-                    <p className="text-muted mb-0">${el.price.toFixed(2)}</p>
-                  </div>
-                  <Button
-                    variant="danger"
-                    size="sm"
-                    onClick={() => removeFromCart(el)}
-                  >
-                    -
-                  </Button>
-                </div>
-              ))}
-              <hr />
-              <h5>Total: ${cartTotal.toFixed(2)}</h5>
-            </>
-          ) : (
-            <p>Your cart is empty.</p>
-          )}
-        </Offcanvas.Body>
-      </Offcanvas>
 
       <Catalog
         viewer={viewer}
@@ -107,6 +83,18 @@ function App() {
         removeFromCart={removeFromCart}
         catalog={catalog}
       />
+
+      <Cart
+        viewer={viewer}
+        setViewer={setViewer}
+        cart={cart}
+        setCart={setCart}
+        cartTotal={cartTotal}
+        setCartTotal={setCartTotal}
+        removeFromCart={removeFromCart}
+      />
+
+      <Summary viewer={viewer} setViewer={setViewer} />
     </div>
   );
 }
