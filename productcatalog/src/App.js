@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { Navbar, Container, Nav, Button } from 'react-bootstrap';
-import { FaShoppingCart } from 'react-icons/fa';
 import Cart from './cart';
 import Catalog from './catalog';
 import Summary from './summary';
@@ -31,6 +29,10 @@ function App() {
     total();
   }, [cart]);
 
+  const addToCart = (el) => {
+    setCart([...cart, el]);
+  };
+
   const removeFromCart = (el) => {
     let itemFound = false;
     const updatedCart = cart.filter((cartItem) => {
@@ -45,40 +47,13 @@ function App() {
     }
   };
 
-  const addToCart = (el) => {
-    setCart([...cart, el]);
-  };
-
-  const handleIndexClick = () => {
-    setViewer(0);
-  };
-
-  const handleCartClick = () => {
-    setViewer(1);
-  };
-
-  const handleSummaryClick = () => {
-    setViewer(2);
-  };
-
   return (
-    <div>
-      <Navbar bg="dark" variant="dark" expand="lg">
-        <Container>
-          <Navbar.Brand role="button" onClick={handleIndexClick}>
-            My Shop
-          </Navbar.Brand>
-          <Nav className="me-auto">
-            <Button variant="outline-light" onClick={handleCartClick}>
-              <FaShoppingCart /> <span className="ms-2">{cart.length}</span>
-            </Button>
-          </Nav>
-        </Container>
-      </Navbar>
-
+    <>
       <Catalog
         viewer={viewer}
         setViewer={setViewer}
+        cart={cart}
+        setCart={setCart}
         addToCart={addToCart}
         removeFromCart={removeFromCart}
         catalog={catalog}
@@ -95,7 +70,7 @@ function App() {
       />
 
       <Summary viewer={viewer} setViewer={setViewer} />
-    </div>
+    </>
   );
 }
 
