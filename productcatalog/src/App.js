@@ -9,6 +9,7 @@ function App() {
   const [cartTotal, setCartTotal] = useState(0);
   const [quantity, setQuantity] = useState(0);
   const [viewer, setViewer] = useState(0);
+  const [userInfo, setUserInfo] = useState({});
 
   useEffect(() => {
     const fetchData = async () => {
@@ -67,6 +68,12 @@ function App() {
     });
   };
 
+  const resetCart = () => {
+    setCart({});
+    setCartTotal(0);
+    setQuantity(0);
+  };
+
   return (
     <>
       <Catalog
@@ -89,9 +96,17 @@ function App() {
         setCartTotal={setCartTotal}
         addToCart={addToCart}
         removeFromCart={removeFromCart}
+        setUserInfo={setUserInfo}
       />
 
-      <Summary viewer={viewer} setViewer={setViewer} />
+      <Summary
+        viewer={viewer}
+        setViewer={setViewer}
+        cart={cart}
+        cartTotal={cartTotal}
+        userInfo={userInfo}
+        resetCart={resetCart}
+      />
     </>
   );
 }
