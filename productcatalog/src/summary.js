@@ -65,15 +65,16 @@ const Summary = ({
 
             <h4 className="mt-4">User Information</h4>
             <p>
-              <strong>Full Name:</strong> {userInfo.fullName}
+              <strong>Full Name:</strong> {userInfo.fullName || "N/A"}
             </p>
             <p>
-              <strong>Email:</strong> {userInfo.email}
+              <strong>Email:</strong> {userInfo.email || "N/A"}
             </p>
             <p>
-              <strong>Shipping Address:</strong> {userInfo.address1}
-              {userInfo.address2 && `, ${userInfo.address2}`}, {userInfo.city},{" "}
-              {userInfo.state} {userInfo.zip}
+              <strong>Shipping Address:</strong>
+              {userInfo.address1 || ""}
+              {userInfo.address2 ? `, ${userInfo.address2}` : ""},{" "}
+              {userInfo.city || ""}, {userInfo.state || ""} {userInfo.zip || ""}
             </p>
             <p>
               <strong>Card Number:</strong>{" "}

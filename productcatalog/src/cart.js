@@ -20,6 +20,7 @@ const Cart = ({
   cartTotal,
   addToCart,
   removeFromCart,
+  setUserInfo,
 }) => {
   const [form, setForm] = useState({
     fullName: "",
@@ -72,6 +73,7 @@ const Cart = ({
 
   const handleOrder = () => {
     if (validateForm()) {
+      setUserInfo(form);
       setViewer(2);
     }
   };
