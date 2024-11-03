@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Navbar,
   Nav,
@@ -7,6 +7,7 @@ import {
   Card,
   Row,
   Col,
+  Form
 } from 'react-bootstrap';
 import { FaShoppingCart } from 'react-icons/fa';
 
@@ -20,9 +21,23 @@ const Catalog = ({
   removeFromCart,
   catalog,
 }) => {
+  const [searchTerm, setSearchTerm] = useState('');
+
   const handleForwardClick = () => {
     setViewer(1);
   };
+
+  const handleSearch = (event) => {
+    setSearchTerm(event.target.value.toLowerCase());
+  };
+
+  const clearSearch = () => {
+    setSearchTerm('');
+  };
+
+  const filteredCatalog = catalog.filter((item) =>
+    item.title.toLowerCase().includes(searchTerm)
+  );
 
   return (
     <>
@@ -38,8 +53,21 @@ const Catalog = ({
             </Container>
           </Navbar>
           <Container className="mt-4">
+            <Form>
+              <Form.Group className="mb-3" controlId="searchBar">
+                <Form.Control
+                  type="text"
+                  placeholder="Search products..."
+                  value={searchTerm}
+                  onChange={handleSearch}
+                />
+              </Form.Group>
+              <Button variant="secondary" onClick={clearSearch} className="mb-4">
+                Clear Search
+              </Button>
+            </Form>
             <Row>
-              {catalog.map((el) => {
+              {filteredCatalog.map((el) => {
                 const cartItem = cart[el.id];
                 const quantity = cartItem ? cartItem.quantity : 0;
 
